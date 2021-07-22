@@ -8,19 +8,22 @@
 import UIKit
 import SDWebImage
 
-class CharactersTableViewController: UITableViewController {
+class CharactersTableViewController: UITableViewController, EpisodesDelegate {
+    
+    private var episodesViewController = EpisodesViewController()
+    
+    private var charactersListViewModel = CharactersListViewModel()
     
     let K = Constants()
     
-    let searchController = UISearchController(searchResultsController: nil)
+    private let searchController = UISearchController(searchResultsController: nil)
     
-    let appManager = AppManager()
-    var rowIndexFromEpisodes: Int? = nil
-    var selectedRow: Int?
+    private var rowIndexFromEpisodes: Int? = nil
+    private var selectedRow: Int?
     
-    var filteredCharacters: [String] = []
+    private var filteredCharacters: [String] = []
     
-    var characters: [String] = [""]
+    private var characters: [String] = [""]
     
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
@@ -34,6 +37,8 @@ class CharactersTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        EpisodesViewController.delegate = self
+        
         // 1
         searchController.searchResultsUpdater = self
         // 2
@@ -45,14 +50,19 @@ class CharactersTableViewController: UITableViewController {
         // 5
         definesPresentationContext = true
         
-        //        characters = appManager.getStringOfCharacters()
         
         var isSearchBarEmpty: Bool {
             return searchController.searchBar.text?.isEmpty ?? true
         }
         
-        self.appManager.delegate = self
+    }
+    
+    
+    func episodesDidLoad(vm: SingleCharacterViewModel) {
+        charactersListViewModel.addCharacterViewModel(vm)
         
+        self.characters = charactersListViewModel.getAllCharacters()
+        self.tableView.reloadData()
     }
     
     // MARK: - Table view data source
@@ -62,51 +72,66 @@ class CharactersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let numberOfRows = appManager.getCountOfCharacters(for: rowIndexFromEpisodes!)
         
-        return numberOfRows
+        if isFiltering {
+            return filteredCharacters.count
+        }
+        
+        return charactersListViewModel.numberOfRows(section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K.characterCell, for: indexPath)
         
-        let imageURL = appManager.getCharacterImage(for: indexPath.row, and: rowIndexFromEpisodes!)
+        if isFiltering {
+            
+            cell.textLabel?.text = filteredCharacters[indexPath.row]
+            
+            return cell
+            
+        } else {
         
-        cell.imageView?.sd_setImage(with: URL(string: imageURL), placeholderImage: UIImage(named: K.placeHolderImage))
+        cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K.placeHolderImage))
         
-        cell.textLabel?.text = appManager.getCharacterName(for: indexPath.row)
+        cell.textLabel?.text = charactersListViewModel.modelAt(indexPath.row).name
+        
+        
         
         cell.accessoryType = .disclosureIndicator
         
+        
+        
         return cell
+        }
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
+    
+    
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         selectedRow = indexPath.row
         performSegue(withIdentifier: K.segueToSingleCharacter, sender: self)
+        
+        
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         if (segue.identifier == K.segueToSingleCharacter){
             let destinationVC = segue.destination as! SingleCharacterViewController
             destinationVC.characterIndex = selectedRow
             destinationVC.rowIndex = self.rowIndexFromEpisodes
-            destinationVC.appManager = self.appManager
+            destinationVC.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
         }
     }
 }
 
-extension CharactersTableViewController: AppManagerDelegate {
-    func didUpdateEpisodes(_ appManager: AppManager, episodes: [EpisodesModel]) {
-        
-    }
-    
-    func didUpdateCharacters(_ appManager: AppManager, characters: [CharactersModel]) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-}
 
 extension CharactersTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
@@ -116,7 +141,7 @@ extension CharactersTableViewController: UISearchResultsUpdating {
     
     func filterContentForSearchText(_ searchText: String) {
         filteredCharacters = characters.filter { (characters: String) -> Bool in
-            print(" printing characters : \(characters)")
+            print(" printing characters : \(filteredCharacters)")
             return characters.lowercased().contains(searchText.lowercased())
             
         }
@@ -124,4 +149,6 @@ extension CharactersTableViewController: UISearchResultsUpdating {
         tableView.reloadData()
         
     }
+    
+    
 }

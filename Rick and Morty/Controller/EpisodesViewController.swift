@@ -7,13 +7,28 @@
 
 import UIKit
 
+protocol EpisodesDelegate {
+    func episodesDidLoad(vm: SingleCharacterViewModel)
+}
+
 class EpisodesViewController: UITableViewController {
+    func finishedLoading() {
+        self.tableView.reloadData()
+    }
     
     let K = Constants()
     
+    static var delegate:EpisodesDelegate?
+    
+    private var episodesListViewModel = EpisodeListViewModel()
+    private var episodeVM = EpisodesViewModel()
+    
+    private var charactersViewModel = CharactersViewModel()
+    private var characterListVM = CharactersListViewModel()
+    
     var rowIndex: Int = 0
-    var numberOfRows: Int?
-    let appManager = AppManager()
+//    var numberOfRows: Int?
+
     let searchController = UISearchController(searchResultsController: nil)
     var filteredEpisodes: [String] = []
     var episodes: [String] = []
@@ -28,8 +43,12 @@ class EpisodesViewController: UITableViewController {
     
     @IBOutlet weak var episodesSearchBar: UISearchBar!
     
+    var webService:WebService?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        webService?.delegate = self
         
         // 1
         searchController.searchResultsUpdater = self
@@ -44,9 +63,20 @@ class EpisodesViewController: UITableViewController {
         
         var isSearchBarEmpty: Bool {
             return searchController.searchBar.text?.isEmpty ?? true
+            
         }
         
-        appManager.delegate = self
+        episodeVM.addEpisode() { (vm) in
+
+            self.episodesListViewModel.addEpisodeViewModel(vm)
+            self.episodes = self.episodesListViewModel.getAllEpisodes()
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        }
+    
 
     }
     
@@ -59,54 +89,53 @@ class EpisodesViewController: UITableViewController {
             return filteredEpisodes.count
         }
         
-        return 20
+        return episodesListViewModel.numberOfRows(section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: K.episodeCell, for: indexPath)
         
-        let episodeDigits = appManager.getEpisodeDigits(for: indexPath.row)
-        var episodeName = appManager.getEpisodeName(for: indexPath.row)
-        
-        episodes.append(episodeName ?? "oops")
-        
         if isFiltering {
-            episodeName = filteredEpisodes[indexPath.row]
-        }
+            
+            cell.textLabel?.text = filteredEpisodes[indexPath.row]
+            
+            return cell
+            
+        } else {
         
-        if (episodeName != nil){
-            cell.textLabel?.text = "\(episodeDigits) \(episodeName!)"
-        }
+        let episodeListVM = episodesListViewModel.modelAt(indexPath.row)
+        
+        cell.textLabel?.text = "\(episodeListVM.episodeDigits)  \(episodeListVM.name)"
         
         cell.imageView?.image = UIImage(named: K.placeHolderImage)
         cell.accessoryType = .disclosureIndicator
         
+        cell.textLabel!.numberOfLines = 0
+        cell.textLabel!.lineBreakMode = .byWordWrapping
+        
         return cell
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         rowIndex = indexPath.row
+        
+        charactersViewModel.addCharacter(for: indexPath.row, completion: { vm in
+            EpisodesViewController.delegate?.episodesDidLoad(vm: vm)
+            
+            
+        }, episodesListViewModel: self.episodesListViewModel)
+        
+
+        
         performSegue(withIdentifier: K.segueToCharacters, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == K.segueToCharacters){
             let destinationVC = segue.destination as! CharactersTableViewController
-            destinationVC.rowIndexFromEpisodes = rowIndex
         }
-    }
-}
-
-extension EpisodesViewController: AppManagerDelegate {
-    func didUpdateEpisodes(_ appManager: AppManager, episodes: [EpisodesModel]) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    func didUpdateCharacters(_ appManager: AppManager, characters: [CharactersModel]) {
-        
     }
 }
 
@@ -118,7 +147,7 @@ extension EpisodesViewController: UISearchResultsUpdating {
     
     func filterContentForSearchText(_ searchText: String) {
         filteredEpisodes = episodes.filter { (episodes: String) -> Bool in
-            print(" printing episodes : \(episodes)")
+            print(" printing episodes : \(filteredEpisodes)")
             return episodes.lowercased().contains(searchText.lowercased())
             
         }
