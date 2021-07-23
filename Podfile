@@ -8,6 +8,6 @@ target 'Rick and Morty' do
   # Pods for Rick and Morty
   platform :ios, '8.0'
   pod 'SDWebImage', '~> 5.0'
-
+  pod 'SwiftLint'
 
 end

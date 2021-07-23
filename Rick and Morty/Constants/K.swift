@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Constants {
+struct K {
     let episodes  = "episodes"
     let characters  = "characters"
-    
+
     let episodesSearchBarText = "Search episodes"
     let charactersSearchBarText = "Search characters"
     

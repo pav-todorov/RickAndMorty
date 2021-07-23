@@ -17,23 +17,19 @@ class EpisodesViewModel {
             }
             
             
-            
             let episodeResource = Resource<EpisodeList>(url: episodesURL) { data in
                 let episodes = try? JSONDecoder().decode(EpisodeList.self, from: data)
-                
-                //            print(episodes)
-                
+                                
                 return episodes
             }
             
             WebService().load(resource: episodeResource) { (result) in
                 if let episodeResource = result?.results {
-                    //                let vm = SingleEpisodeViewModel(episode: episodeResource)
+
                     episodeResource.map { completion(SingleEpisodeViewModel(episode: $0))
+                        
                     }
-                    
                 }
-                
             }
             
         }

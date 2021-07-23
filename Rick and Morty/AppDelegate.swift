@@ -25,49 +25,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
-                                                                  NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
-                                                                  NSAttributedString.Key.strokeWidth : -2.0,
-                                                                  NSAttributedString.Key.font : font]
+            NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+            NSAttributedString.Key.strokeWidth : -2.0,
+            NSAttributedString.Key.font : font]
         navBarAppearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
-                                                     NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
-                                                     NSAttributedString.Key.strokeWidth : -2.0,
-                                                     NSAttributedString.Key.font : font]
+NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+        NSAttributedString.Key.strokeWidth : -2.0,
+        NSAttributedString.Key.font : font]
         navBarAppearance.backgroundColor = myColor
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
-        
-        
-        
-//        navBarAppearance.adjustsFontSizeToFitWidth = true
-        
-        
-        //
-        //        UINavigationBar.appearance().backgroundColor = UIColor(displayP3Red: 35/255, green: 39/255, blue: 50/255, alpha: 1.0)
-        //
-        //            UINavigationBar.appearance().barTintColor = UIColor(displayP3Red: 35/255, green: 39/255, blue: 50/255, alpha: 1.0)
-        //
-        //
-        //            UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
-        //                 NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
-        //                 NSAttributedString.Key.strokeWidth : -4.0,
-        //                 NSAttributedString.Key.font : font]
-        //
-        //
-        //
-        //            UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
-        //                NSAttributedString.Key.strokeColor : UIColor.red,
-        //                NSAttributedString.Key.strokeWidth : -4.0,
-        //                NSAttributedString.Key.font : font]
-        //
-        //
-        //
-        //            UINavigationBar.appearance().largeTitleTextAttributes =
-        //            [NSAttributedString.Key.foregroundColor: UIColor.white,
-        //            NSAttributedString.Key.strokeColor : UIColor.cyan,
-        //            NSAttributedString.Key.strokeWidth : -4.0,
-        //            NSAttributedString.Key.font : font]
-        
-        
         
         
         return true
