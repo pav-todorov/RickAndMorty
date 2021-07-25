@@ -17,7 +17,6 @@ class CharactersTableViewController: UITableViewController {
     private var selectedRow: Int?
     private var filteredCharacters: [SingleCharacterViewModel] = []
     
-    private var characters: [String] = [""]
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
@@ -56,6 +55,7 @@ class CharactersTableViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K().characterCell, for: indexPath)
+        cell.textLabel!.numberOfLines = 0
         if isFiltering {
             cell.textLabel?.text = filteredCharacters[indexPath.row].name
             cell.imageView?.sd_setImage(with: URL(string: filteredCharacters[indexPath.row].imageURL), placeholderImage: UIImage(named: K().placeHolderImage))
@@ -110,7 +110,6 @@ extension CharactersTableViewController: UISearchResultsUpdating {
 extension CharactersTableViewController: EpisodesDelegate {
     func episodesDidLoad(vm: SingleCharacterViewModel) {
         charactersListViewModel.addCharacterViewModel(vm)
-        self.characters = charactersListViewModel.getAllCharacters()
         self.tableView.reloadData()
     }
 }

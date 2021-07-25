@@ -26,7 +26,6 @@ class EpisodesViewController: UITableViewController {
 
     let searchController = UISearchController(searchResultsController: nil)
     var filteredEpisodes: [SingleEpisodeViewModel] = []
-    var episodes: [String] = []
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
@@ -56,7 +55,6 @@ class EpisodesViewController: UITableViewController {
         episodeVM.addEpisode() { (vm) in
 
             self.episodesListViewModel.addEpisodeViewModel(vm)
-            self.episodes = self.episodesListViewModel.getAllEpisodes()
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -74,18 +72,21 @@ class EpisodesViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K().episodeCell, for: indexPath)
-        if isFiltering {
-            
-            
-            cell.textLabel?.text = filteredEpisodes[indexPath.row].name
-                return cell
-        } else {
-        let episodeListVM = episodesListViewModel.modelAt(indexPath.row)
-        cell.textLabel?.text = "\(episodeListVM.episodeDigits)  \(episodeListVM.name)"
-        cell.imageView?.image = UIImage(named: K().placeHolderImage)
+        
         cell.accessoryType = .disclosureIndicator
         cell.textLabel!.numberOfLines = 0
         cell.textLabel!.lineBreakMode = .byWordWrapping
+        cell.imageView?.image = UIImage(named: K().placeHolderImage)
+        
+        if isFiltering {
+            
+            cell.textLabel?.text = filteredEpisodes[indexPath.row].episodeDigits + " " + filteredEpisodes[indexPath.row].name
+                return cell
+        } else {
+            
+        let episodeListVM = episodesListViewModel.modelAt(indexPath.row)
+        cell.textLabel?.text = "\(episodeListVM.episodeDigits)  \(episodeListVM.name)"
+    
         return cell
         }
     }
@@ -124,9 +125,7 @@ extension EpisodesViewController: UISearchResultsUpdating {
         filterContentForSearchText(searchBar.text!)
     }
     func filterContentForSearchText(_ searchText: String) {
-        
-        episodes = episodesListViewModel.getAllEpisodes()
-        
+    
         filteredEpisodes = episodesListViewModel.getEpisodeNamed(searchText)
 
         tableView.reloadData()

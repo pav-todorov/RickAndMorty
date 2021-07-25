@@ -18,19 +18,13 @@ class EpisodeListViewModel {
     func modelAt(_ index: Int) -> SingleEpisodeViewModel {
         return episodeViewModels[index]
     }
-    func getAllEpisodes() -> [String] {
-        var arrayOfEpisodesToString = [String]()
-        for episode in 0..<episodeViewModels.count {
-            arrayOfEpisodesToString.append(episodeViewModels[episode].episodeDigits + " " + episodeViewModels[episode].name)
-        }
-        return arrayOfEpisodesToString
-    }
     
     func getEpisodeNamed(_ nameOfEpisode: String) -> [SingleEpisodeViewModel] {
         
         let foundEpisode = episodeViewModels.filter {
             
-            $0.name.lowercased().contains(nameOfEpisode.lowercased())
+            $0.name.lowercased().contains(nameOfEpisode.lowercased()) ||
+                $0.episodeDigits.lowercased().contains(nameOfEpisode.lowercased())
             
         }
         
@@ -65,13 +59,6 @@ class CharactersListViewModel {
     }
     func modelAt(_ index: Int) -> SingleCharacterViewModel {
         return characterViewModels[index]
-    }
-    func getAllCharacters() -> [String] {
-        var arrayOfCharactersToString = [String]()
-        for character in 0..<characterViewModels.count {
-            arrayOfCharactersToString.append(characterViewModels[character].name)
-        }
-        return arrayOfCharactersToString
     }
     
     func getCharacterNamed(_ nameOfCharacter: String) -> [SingleCharacterViewModel] {
