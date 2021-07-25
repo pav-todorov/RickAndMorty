@@ -15,7 +15,7 @@ class CharactersTableViewController: UITableViewController {
     
     private var rowIndexFromEpisodes: Int?
     private var selectedRow: Int?
-    private var filteredCharacters: [String] = []
+    private var filteredCharacters: [SingleCharacterViewModel] = []
     
     private var characters: [String] = [""]
     var isSearchBarEmpty: Bool {
@@ -57,7 +57,9 @@ class CharactersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K().characterCell, for: indexPath)
         if isFiltering {
-            cell.textLabel?.text = filteredCharacters[indexPath.row]
+            cell.textLabel?.text = filteredCharacters[indexPath.row].name
+            cell.imageView?.sd_setImage(with: URL(string: filteredCharacters[indexPath.row].imageURL), placeholderImage: UIImage(named: K().placeHolderImage))
+
             return cell
         } else {
             cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K().placeHolderImage))
@@ -70,6 +72,7 @@ class CharactersTableViewController: UITableViewController {
         return 60
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         tableView.deselectRow(at: indexPath, animated: true)
         selectedRow = indexPath.row
         performSegue(withIdentifier: K().segueToSingleCharacter, sender: self)
@@ -77,7 +80,12 @@ class CharactersTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == K().segueToSingleCharacter){
             let destinationVC = segue.destination as? SingleCharacterViewController
-            destinationVC!.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
+            if !isFiltering {
+                destinationVC!.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
+            } else {
+                destinationVC!.singleCharacter = filteredCharacters[selectedRow!]
+            }
+            
         }
     }
 }
@@ -90,9 +98,9 @@ extension CharactersTableViewController: UISearchResultsUpdating {
         filterContentForSearchText(searchBar.text!)
     }
     func filterContentForSearchText(_ searchText: String) {
-        filteredCharacters = characters.filter { (characters: String) -> Bool in
-            return characters.lowercased().contains(searchText.lowercased())
-        }
+        
+        filteredCharacters = charactersListViewModel.getCharacterNamed(searchText)
+        
         tableView.reloadData()
     }
 }

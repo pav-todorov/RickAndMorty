@@ -25,6 +25,18 @@ class EpisodeListViewModel {
         }
         return arrayOfEpisodesToString
     }
+    
+    func getEpisodeNamed(_ nameOfEpisode: String) -> [SingleEpisodeViewModel] {
+        
+        let foundEpisode = episodeViewModels.filter {
+            
+            $0.name.lowercased().contains(nameOfEpisode.lowercased())
+            
+        }
+        
+        return foundEpisode
+        
+    }
 }
 
 class SingleEpisodeViewModel {
@@ -60,6 +72,18 @@ class CharactersListViewModel {
             arrayOfCharactersToString.append(characterViewModels[character].name)
         }
         return arrayOfCharactersToString
+    }
+    
+    func getCharacterNamed(_ nameOfCharacter: String) -> [SingleCharacterViewModel] {
+        
+        let foundCharacter = characterViewModels.filter {
+            
+            $0.name.lowercased().contains(nameOfCharacter.lowercased())
+            
+        }
+        
+        return foundCharacter
+        
     }
 }
 

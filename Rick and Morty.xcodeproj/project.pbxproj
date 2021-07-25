@@ -176,8 +176,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E99F5E68268DD71A00345DBC /* Build configuration list for PBXNativeTarget "Rick and Morty" */;
 			buildPhases = (
-				E9BFCEAC26AB033300A1AB2C /* ShellScript */,
 				F54E580B2F00832BE0023FC8 /* [CP] Check Pods Manifest.lock */,
+				E9BFCEAC26AB033300A1AB2C /* ShellScript */,
 				E99F5E50268DD71900345DBC /* Sources */,
 				E99F5E51268DD71900345DBC /* Frameworks */,
 				E99F5E52268DD71900345DBC /* Resources */,
@@ -271,7 +271,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+			shellScript = "
+";
 		};
 		F54E580B2F00832BE0023FC8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

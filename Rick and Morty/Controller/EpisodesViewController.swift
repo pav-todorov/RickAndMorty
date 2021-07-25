@@ -25,7 +25,7 @@ class EpisodesViewController: UITableViewController {
     var rowIndex: Int = 0
 
     let searchController = UISearchController(searchResultsController: nil)
-    var filteredEpisodes: [String] = []
+    var filteredEpisodes: [SingleEpisodeViewModel] = []
     var episodes: [String] = []
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
@@ -36,7 +36,6 @@ class EpisodesViewController: UITableViewController {
     
     @IBOutlet weak var episodesSearchBar: UISearchBar!
     var webService: WebService?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // 1
@@ -76,7 +75,9 @@ class EpisodesViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K().episodeCell, for: indexPath)
         if isFiltering {
-                cell.textLabel?.text = filteredEpisodes[indexPath.row]
+            
+            
+            cell.textLabel?.text = filteredEpisodes[indexPath.row].name
                 return cell
         } else {
         let episodeListVM = episodesListViewModel.modelAt(indexPath.row)
@@ -90,10 +91,25 @@ class EpisodesViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         rowIndex = indexPath.row
-        charactersViewModel.addCharacter(for: indexPath.row, completion: { vm in
-            EpisodesViewController.delegate?.episodesDidLoad(vm: vm)
-        }, episodesListViewModel: self.episodesListViewModel)
-        performSegue(withIdentifier: K().segueToCharacters, sender: self)
+        
+        if !isFiltering {
+            
+            charactersViewModel.addCharacter(for: indexPath.row, completion: { vm in
+                EpisodesViewController.delegate?.episodesDidLoad(vm: vm)
+            }, episodesListViewModel: self.episodesListViewModel)
+            performSegue(withIdentifier: K().segueToCharacters, sender: self)
+            
+        } else {
+            
+            charactersViewModel.addCharactersFromFiltering(completion: { vm in
+                EpisodesViewController.delegate?.episodesDidLoad(vm: vm)
+            }, episode: self.filteredEpisodes[indexPath.row])
+            
+            performSegue(withIdentifier: K().segueToCharacters, sender: self)
+        }
+        
+        
+
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K().segueToCharacters {
@@ -108,10 +124,11 @@ extension EpisodesViewController: UISearchResultsUpdating {
         filterContentForSearchText(searchBar.text!)
     }
     func filterContentForSearchText(_ searchText: String) {
-        filteredEpisodes = episodes.filter { (episodes: String) -> Bool in
+        
+        episodes = episodesListViewModel.getAllEpisodes()
+        
+        filteredEpisodes = episodesListViewModel.getEpisodeNamed(searchText)
 
-            return episodes.lowercased().contains(searchText.lowercased())
-        }
         tableView.reloadData()
     }
 }

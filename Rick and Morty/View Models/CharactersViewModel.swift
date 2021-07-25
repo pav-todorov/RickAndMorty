@@ -25,4 +25,24 @@ class CharactersViewModel {
             }
         }
     }
+    
+    func addCharactersFromFiltering(completion: @escaping (SingleCharacterViewModel) -> Void, episode: SingleEpisodeViewModel) {
+        let charactersCount = episode.characters.count
+        for index in 0..<charactersCount {
+            guard let episodesURL = URL(string: episode.characters[index] ) else {
+                fatalError("The character URL is wrong.")
+            }
+            let characterResource = Resource<Character>(url: episodesURL) { data in
+                let characters = try? JSONDecoder().decode(Character.self, from: data)
+                return characters
+            }
+            WebService().load(resource: characterResource) { (result) in
+                if let characterResource = result {
+                    completion(SingleCharacterViewModel(character: characterResource))
+                }
+            }
+        }
+    }
+
+    
 }
