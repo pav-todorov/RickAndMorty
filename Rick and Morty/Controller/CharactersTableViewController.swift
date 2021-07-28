@@ -79,7 +79,13 @@ class CharactersTableViewController: UITableViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == K().segueToSingleCharacter){
+            
+//            let destinationNavigationController = segue.destination as! UINavigationController
+//            let destinationVC = destinationNavigationController.topViewController
+
+            
             let destinationVC = segue.destination as? SingleCharacterViewController
+            
             if !isFiltering {
                 destinationVC!.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
             } else {

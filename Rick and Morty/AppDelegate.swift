@@ -24,17 +24,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().prefersLargeTitles = true
         
         let navBarAppearance = UINavigationBarAppearance()
+        
         navBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
             NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
             NSAttributedString.Key.strokeWidth : -2.0,
             NSAttributedString.Key.font : font]
+        
         navBarAppearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
 NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
         NSAttributedString.Key.strokeWidth : -2.0,
         NSAttributedString.Key.font : font]
+        
         navBarAppearance.backgroundColor = myColor
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+
         
         
         return true
