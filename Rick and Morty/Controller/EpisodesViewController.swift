@@ -37,6 +37,10 @@ class EpisodesViewController: UITableViewController {
     var webService: WebService?
     override func viewDidLoad() {
         super.viewDidLoad()
+//        self.title = "Episodes"
+//        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: UIFont(name: "get schwifty", size: 20)!]
+
+        
         // 1
         searchController.searchResultsUpdater = self
         // 2

@@ -13,6 +13,8 @@ class CharactersTableViewController: UITableViewController {
     private var charactersListViewModel = CharactersListViewModel()
     private let searchController = UISearchController(searchResultsController: nil)
     
+    var nameOfCurrentEpisode: String?
+    
     private var rowIndexFromEpisodes: Int?
     private var selectedRow: Int?
     private var filteredCharacters: [SingleCharacterViewModel] = []
@@ -26,6 +28,8 @@ class CharactersTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+  
         
         EpisodesViewController.delegate = self
         // 1
@@ -41,8 +45,11 @@ class CharactersTableViewController: UITableViewController {
         searchController.searchBar.searchTextField.textColor = .white
         var isSearchBarEmpty: Bool {
             return searchController.searchBar.text?.isEmpty ?? true
+            
+        
         }
     }
+    
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -59,18 +66,46 @@ class CharactersTableViewController: UITableViewController {
         if isFiltering {
             cell.textLabel?.text = filteredCharacters[indexPath.row].name
             cell.imageView?.sd_setImage(with: URL(string: filteredCharacters[indexPath.row].imageURL), placeholderImage: UIImage(named: K().placeHolderImage))
+            
+//            cell.imageView?.layer.cornerRadius = (cell.imageView?.frame.size.width)! / 2
+//            cell.imageView?.clipsToBounds = true
 
             return cell
         } else {
-            cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K().placeHolderImage))
+            
+            let transformer = SDImageRoundCornerTransformer(radius: CGFloat(100), corners: .allCorners, borderWidth: CGFloat(20), borderColor: .white)
+            
+            cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
+            
+            
+            
             cell.textLabel?.text = charactersListViewModel.modelAt(indexPath.row).name
             cell.accessoryType = .disclosureIndicator
+            
+//            cell.imageView?.layer.cornerRadius = (cell.imageView?.frame.size.width)! / 2
+//            cell.imageView?.clipsToBounds = true
+            
+//            cell.imageView?.layer.borderColor = UIColor.white.cgColor
+//            cell.imageView?.layer.borderWidth = 4
+            
+            cell.imageView?.layer.shadowColor = UIColor.black.cgColor
+            cell.imageView?.layer.shadowOpacity = 0.5
+            cell.imageView?.layer.shadowOffset = .zero
+            cell.imageView?.layer.shadowRadius = 5
+            
+            
+//            cell.imageView?.layer.masksToBounds = false
+            
             return cell
         }
+        
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
+    
+    
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)

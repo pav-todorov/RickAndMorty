@@ -10,38 +10,54 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        guard let font = UIFont(name: "get schwifty", size: 34) else {
+        guard let font = UIFont(name: "get schwifty", size: 35) else {
             fatalError("custom font not found")
         }
         
         let myColor = UIColor(displayP3Red: 35/255, green: 39/255, blue: 50/255, alpha: 1.0)
-        
-        UIBarButtonItem.appearance().tintColor = .white
-        UINavigationBar.appearance().prefersLargeTitles = true
-        
+            
         let navBarAppearance = UINavigationBarAppearance()
         
-        navBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
-            NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
-            NSAttributedString.Key.strokeWidth : -2.0,
-            NSAttributedString.Key.font : font]
+        UIBarButtonItem.appearance().tintColor = .white
+        
+        UINavigationBar.appearance().prefersLargeTitles = true
+            
+        
+        navBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green:                                                                164/255, blue: 193/255, alpha: 1.0),
+                                                NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+                                                NSAttributedString.Key.strokeWidth : -2.0,
+                                                NSAttributedString.Key.font : font]
         
         navBarAppearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(displayP3Red: 54/255, green: 164/255, blue: 193/255, alpha: 1.0),
-NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
-        NSAttributedString.Key.strokeWidth : -2.0,
-        NSAttributedString.Key.font : font]
+                                                     NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+                                                     NSAttributedString.Key.strokeWidth : -2.0,
+                                                     NSAttributedString.Key.font : font]
         
         navBarAppearance.backgroundColor = myColor
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
 
-        
-        
+            
+//MARK: - Not working properly - the following code works perfectly by itself but when the above UINavigationBar.appearance() modifications are being applied it no longer works for the back button. Strangely enough, the UIBarButtonItem.appearance().tintColor = .white is being applied, regardless.
+            
+//        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(displayP3Red:                                                      54/255, green: 164/255, blue: 193/255, alpha: 1.0),
+//                                                                 NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+//                                                                 NSAttributedString.Key.strokeWidth : -2.0,
+//                                                                 NSAttributedString.Key.font : font], for: UIControl.State.normal)
+//
+//        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(displayP3Red:                                                      54/255, green: 164/255, blue: 193/255, alpha: 1.0),
+//                                                                 NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+//                                                                 NSAttributedString.Key.strokeWidth : -2.0,
+//                                                                 NSAttributedString.Key.font : font], for: .highlighted)
+//
+//        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(displayP3Red:                                                      54/255, green: 164/255, blue: 193/255, alpha: 1.0), NSAttributedString.Key.strokeColor : UIColor(displayP3Red: 202/255, green: 215/255, blue: 85/255, alpha: 1.0),
+//                                                                 NSAttributedString.Key.strokeWidth : -2.0,
+//                                                                 NSAttributedString.Key.font : font], for: .focused)
+                
         return true
+        
     }
     
     

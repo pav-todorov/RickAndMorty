@@ -21,7 +21,7 @@ class SingleCharacterViewController: UIViewController {
         
         
         nameLabel.adjustsFontSizeToFitWidth = true
-        guard let font = UIFont(name: "get schwifty", size: 50) else {
+        guard let font = UIFont(name: "get schwifty", size: 40) else {
             fatalError("Custom font not found.")
         }
         
@@ -38,6 +38,7 @@ class SingleCharacterViewController: UIViewController {
         let characterGender = singleCharacter.gender
 
         imageView.sd_setImage(with: URL(string: URLString), placeholderImage: UIImage(named: K().placeHolderImage))
+
         nameLabel.text =    characterName
         statusLabel.text =  characterStatus
         speciesLabel.text = characterSpecies
