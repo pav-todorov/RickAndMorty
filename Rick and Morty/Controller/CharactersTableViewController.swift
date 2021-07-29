@@ -63,38 +63,30 @@ class CharactersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K().characterCell, for: indexPath)
         cell.textLabel!.numberOfLines = 0
+        
+        let transformer = SDImageRoundCornerTransformer(radius: CGFloat(100), corners: .allCorners, borderWidth: CGFloat(20), borderColor: .white)
+        
+        cell.textLabel?.text = charactersListViewModel.modelAt(indexPath.row).name
+        cell.accessoryType = .disclosureIndicator
+        
+        cell.imageView?.layer.shadowColor = UIColor.black.cgColor
+        cell.imageView?.layer.shadowOpacity = 0.5
+        cell.imageView?.layer.shadowOffset = .zero
+        cell.imageView?.layer.shadowRadius = 5
+        
         if isFiltering {
             cell.textLabel?.text = filteredCharacters[indexPath.row].name
-            cell.imageView?.sd_setImage(with: URL(string: filteredCharacters[indexPath.row].imageURL), placeholderImage: UIImage(named: K().placeHolderImage))
+            cell.imageView?.sd_setImage(with: URL(string: filteredCharacters[indexPath.row].imageURL), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
             
-//            cell.imageView?.layer.cornerRadius = (cell.imageView?.frame.size.width)! / 2
-//            cell.imageView?.clipsToBounds = true
 
             return cell
         } else {
             
-            let transformer = SDImageRoundCornerTransformer(radius: CGFloat(100), corners: .allCorners, borderWidth: CGFloat(20), borderColor: .white)
-            
             cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
             
             
+         
             
-            cell.textLabel?.text = charactersListViewModel.modelAt(indexPath.row).name
-            cell.accessoryType = .disclosureIndicator
-            
-//            cell.imageView?.layer.cornerRadius = (cell.imageView?.frame.size.width)! / 2
-//            cell.imageView?.clipsToBounds = true
-            
-//            cell.imageView?.layer.borderColor = UIColor.white.cgColor
-//            cell.imageView?.layer.borderWidth = 4
-            
-            cell.imageView?.layer.shadowColor = UIColor.black.cgColor
-            cell.imageView?.layer.shadowOpacity = 0.5
-            cell.imageView?.layer.shadowOffset = .zero
-            cell.imageView?.layer.shadowRadius = 5
-            
-            
-//            cell.imageView?.layer.masksToBounds = false
             
             return cell
         }
