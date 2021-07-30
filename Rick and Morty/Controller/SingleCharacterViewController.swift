@@ -19,6 +19,7 @@ class SingleCharacterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.prefersLargeTitles = false
         
         nameLabel.adjustsFontSizeToFitWidth = true
         guard let font = UIFont(name: "get schwifty", size: 40) else {
@@ -36,13 +37,27 @@ class SingleCharacterViewController: UIViewController {
         let characterStatus = singleCharacter.status
         let characterSpecies = singleCharacter.species
         let characterGender = singleCharacter.gender
+        
+        let transformer = SDImageRoundCornerTransformer(radius: CGFloat(100), corners: .allCorners, borderWidth: CGFloat(10), borderColor: .white)
 
-        imageView.sd_setImage(with: URL(string: URLString), placeholderImage: UIImage(named: K().placeHolderImage))
+        imageView.sd_setImage(with: URL(string: URLString), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
+        
+        imageView?.layer.shadowColor = UIColor.black.cgColor
+        imageView?.layer.shadowOpacity = 0.5
+        imageView?.layer.shadowOffset = .zero
+        imageView?.layer.shadowRadius = 5
 
         nameLabel.text =    characterName
         statusLabel.text =  characterStatus
         speciesLabel.text = characterSpecies
         genderLabel.text =  characterGender
     }
-
+    
+    
+    @IBAction func closeButtonTapped(_ sender: UIBarButtonItem) {
+        
+        self.dismiss(animated: true, completion: nil)
+        
+    }
+    
 }

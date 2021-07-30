@@ -29,8 +29,6 @@ class CharactersTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-  
-        
         EpisodesViewController.delegate = self
         // 1
         searchController.searchResultsUpdater = self
@@ -84,10 +82,6 @@ class CharactersTableViewController: UITableViewController {
             
             cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
             
-            
-         
-            
-            
             return cell
         }
         
@@ -107,16 +101,16 @@ class CharactersTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == K().segueToSingleCharacter){
             
-//            let destinationNavigationController = segue.destination as! UINavigationController
-//            let destinationVC = destinationNavigationController.topViewController
+            let destinationNavigationController = segue.destination as! UINavigationController
+            let destinationVC = destinationNavigationController.topViewController as! SingleCharacterViewController
 
             
-            let destinationVC = segue.destination as? SingleCharacterViewController
+//            let destinationVC = segue.destination as? SingleCharacterViewController
             
             if !isFiltering {
-                destinationVC!.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
+                destinationVC.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
             } else {
-                destinationVC!.singleCharacter = filteredCharacters[selectedRow!]
+                destinationVC.singleCharacter = filteredCharacters[selectedRow!]
             }
             
         }
