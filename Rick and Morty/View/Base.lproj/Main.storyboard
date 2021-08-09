@@ -16,13 +16,13 @@
         <!--Episodes-->
         <scene sceneID="ONg-5p-fqa">
             <objects>
-                <tableViewController id="18k-dr-khU" customClass="EpisodesViewController" customModule="Rick_and_Morty" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="18k-dr-khU" customClass="EpisodesTableViewController" customModule="Rick_and_Morty" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="TS3-mj-ABd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EpisodeCell" id="MaV-vo-Tho" customClass="view">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EpisodeTableViewCell" id="MaV-vo-Tho" customClass="view">
                                 <rect key="frame" x="0.0" y="24.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MaV-vo-Tho" id="Uo7-Ka-IN8">
@@ -49,13 +49,13 @@
         <!--Characters-->
         <scene sceneID="WLY-P0-0Yg">
             <objects>
-                <tableViewController id="a5Y-f8-0oe" customClass="CharactersTableViewController" customModule="Rick_and_Morty" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="CharactersTableViewController" id="a5Y-f8-0oe" customClass="CharactersTableViewController" customModule="Rick_and_Morty" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="voP-AL-uOE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CharacterCell" id="oKf-He-k8o">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CharacterTableViewCell" id="oKf-He-k8o">
                                 <rect key="frame" x="0.0" y="24.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oKf-He-k8o" id="kH5-Ic-atl">
@@ -81,7 +81,7 @@
         <!--Single Character View Controller-->
         <scene sceneID="oeV-W1-U2g">
             <objects>
-                <viewController id="hMS-Rh-uLm" customClass="SingleCharacterViewController" customModule="Rick_and_Morty" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleCharacterViewController" id="hMS-Rh-uLm" customClass="SingleCharacterViewController" customModule="Rick_and_Morty" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5cW-MA-u78">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -182,16 +182,16 @@
                     <navigationItem key="navigationItem" id="MiS-fy-1ee">
                         <barButtonItem key="leftBarButtonItem" title="close" id="OI5-aA-bLJ">
                             <connections>
-                                <action selector="closeButtonTapped:" destination="hMS-Rh-uLm" id="yol-Do-kA2"/>
+                                <action selector="closeButtonTapped:" destination="hMS-Rh-uLm" id="BuB-Pb-Rwh"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="genderLabel" destination="SqU-rA-OUY" id="0FI-UW-6px"/>
-                        <outlet property="imageView" destination="Uc8-HH-Zju" id="Q3f-xO-ww1"/>
-                        <outlet property="nameLabel" destination="6J1-m7-1ou" id="0E3-yG-Ea4"/>
-                        <outlet property="speciesLabel" destination="MPk-kE-CHT" id="Mwj-XR-dPv"/>
-                        <outlet property="statusLabel" destination="SMf-Fa-uY3" id="PJD-eC-HOd"/>
+                        <outlet property="characterImageView" destination="Uc8-HH-Zju" id="hK3-LX-cYb"/>
+                        <outlet property="characterNameLabel" destination="6J1-m7-1ou" id="XxR-dT-1dS"/>
+                        <outlet property="genderLabel" destination="SqU-rA-OUY" id="h7e-Xg-47N"/>
+                        <outlet property="speciesLabel" destination="MPk-kE-CHT" id="6n8-rg-OBE"/>
+                        <outlet property="statusLabel" destination="SMf-Fa-uY3" id="nLp-kg-6Im"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kkj-6M-vPj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

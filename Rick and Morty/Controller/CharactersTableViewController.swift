@@ -1,142 +1,167 @@
 //
 //  CharactersTableViewController.swift
-//  Rick and Morty
+//  Rick and Morty MVVM and RxSwift
 //
-//  Created by Pavel Todorov on 1.07.21.
+//  Created by Pavel Todorov on 4.08.21.
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxDataSources
 import SDWebImage
+import Nuke
+import RxAnimated
+import RxNuke
 
-class CharactersTableViewController: UITableViewController {
-    private var episodesViewController = EpisodesViewController()
-    private var charactersListViewModel = CharactersListViewModel()
-    private let searchController = UISearchController(searchResultsController: nil)
+
+class CharactersTableViewController: UITableViewController, UISearchResultsUpdating {
     
-    var nameOfCurrentEpisode: String?
-    
-    private var rowIndexFromEpisodes: Int?
-    private var selectedRow: Int?
-    private var filteredCharacters: [SingleCharacterViewModel] = []
+    func updateSearchResults(for searchController: UISearchController) {
+        
+    }
     
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
+    
     var isFiltering: Bool {
         return searchController.isActive && !isSearchBarEmpty
     }
     
+    var foundCharacter = BehaviorRelay<[Character]>(value: [])
+    
+    let options = ImageLoadingOptions(
+        placeholder: UIImage(named: "icon"),
+        transition: .fadeIn(duration: 0.33))
+    
+//    var bufferOfCharactersWhileSearching = BehaviorRelay<[Character]>(value: [])
+    
+    private let disposeBag = DisposeBag()
+    var episodeViewModel = BehaviorRelay<EpisodeViewModel?>(value: nil)
+    var receivedEpisode = BehaviorRelay<EpisodeViewModel?>(value: nil)
+    
+    var characterObject = BehaviorRelay<[Character]>(value: [])
+    
+    private let searchController = UISearchController(searchResultsController: nil)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        EpisodesViewController.delegate = self
+        self.tableView.dataSource = nil
+        
+        //MARK: - Setting the search bar
         // 1
         searchController.searchResultsUpdater = self
         // 2
         searchController.obscuresBackgroundDuringPresentation = false
         // 3
-        searchController.searchBar.placeholder = K().charactersSearchBarText
+        searchController.searchBar.placeholder = "Search a character"
         // 4
         navigationItem.searchController = searchController
         // 5
         definesPresentationContext = true
-        searchController.searchBar.searchTextField.textColor = .white
-        var isSearchBarEmpty: Bool {
-            return searchController.searchBar.text?.isEmpty ?? true
-            
         
-        }
-    }
-    
-    // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltering {
-            return filteredCharacters.count
-        }
-        return charactersListViewModel.numberOfRows(section)
-    }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: K().characterCell, for: indexPath)
-        cell.textLabel!.numberOfLines = 0
+//        receivedEpisode.subscribe(onNext: {
+//            episode in
+//
+//            self.episodeViewModel.accept(episode)
+//
+//        }).disposed(by: disposeBag)
         
-        let transformer = SDImageRoundCornerTransformer(radius: CGFloat(100), corners: .allCorners, borderWidth: CGFloat(20), borderColor: .white)
         
-        cell.textLabel?.text = charactersListViewModel.modelAt(indexPath.row).name
-        cell.accessoryType = .disclosureIndicator
+        // MARK: - Table view data
         
-        cell.imageView?.layer.shadowColor = UIColor.black.cgColor
-        cell.imageView?.layer.shadowOpacity = 0.5
-        cell.imageView?.layer.shadowOffset = .zero
-        cell.imageView?.layer.shadowRadius = 5
-        
-        if isFiltering {
-            cell.textLabel?.text = filteredCharacters[indexPath.row].name
-            cell.imageView?.sd_setImage(with: URL(string: filteredCharacters[indexPath.row].imageURL), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
-            
-
-            return cell
-        } else {
-            
-            cell.imageView?.sd_setImage(with: URL(string: charactersListViewModel.modelAt(indexPath.row).imageURL), placeholderImage: UIImage(named: K().placeHolderImage), context: [.imageTransformer : transformer])
-            
-            return cell
-        }
-        
-    }
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
-    
-    
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        selectedRow = indexPath.row
-        performSegue(withIdentifier: K().segueToSingleCharacter, sender: self)
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == K().segueToSingleCharacter){
-            
-            let destinationNavigationController = segue.destination as! UINavigationController
-            let destinationVC = destinationNavigationController.topViewController as! SingleCharacterViewController
-
-            
-//            let destinationVC = segue.destination as? SingleCharacterViewController
-            
-            if !isFiltering {
-                destinationVC.singleCharacter = charactersListViewModel.modelAt(selectedRow!)
+        Observable.combineLatest(characterObject, foundCharacter){ (initialCharacters, filteredCharacters) -> [Character] in
+            if self.isFiltering {
+                return filteredCharacters
             } else {
-                destinationVC.singleCharacter = filteredCharacters[selectedRow!]
+                return initialCharacters
             }
+
+        }.bind(to: tableView.rx.items(cellIdentifier: "CharacterTableViewCell")) { [unowned self] index, model, cell in
+
+            Nuke.loadImage(with: ImageRequest(url: URL(string: model.image)!, processors: [
+                ImageProcessors.Circle(border: ImageProcessingOptions.Border(color: .white, width: 20, unit: .points)),
+
+            ]), options: self.options, into: cell.imageView!)
+
+//            ImagePipeline.shared.rx.loadImage(with: URL(string: model.image)!)
+//                .subscribe(onSuccess: { imageView in
+//                        return cell.imageView!.image = imageView.image
+//                             })
+//                .disposed(by: self.disposeBag)
+
+            cell.imageView?.image = UIImage(named: "icon")
+            cell.accessoryType = .disclosureIndicator
+            cell.textLabel!.numberOfLines = 0
+            cell.imageView?.layer.shadowColor = UIColor.gray.cgColor
+            cell.imageView?.layer.shadowOpacity = 0.5
+            cell.imageView?.layer.shadowOffset = .zero
+            cell.imageView?.layer.shadowRadius = 5
+            cell.textLabel?.text = model.name
+
+        }.disposed(by: disposeBag)
+   
+        populateCharacters()
+        
+        // MARK: - Selecting a row
+        
+        tableView.rx.modelSelected(Character.self)
+            .subscribe(onNext: { [weak self] model in
+                
+                guard let strongSelf = self else { return }
+                
+                guard let singleCharacterVC = strongSelf.storyboard?.instantiateViewController(identifier: "SingleCharacterViewController") as? SingleCharacterViewController else {
+                    fatalError("SingleCharacterViewController not found")
+                }
+                                
+                singleCharacterVC.receivedCharacter.accept(model)
+                                
+                strongSelf.navigationController?.showDetailViewController(singleCharacterVC, sender: self)
+                
+            }).disposed(by: disposeBag)
+        
+        //MARK: - Searching through characters
+        
+        searchController.searchBar.rx.text
+                .orEmpty
+                .distinctUntilChanged()
+                .subscribe(onNext: {query in
+                    self.foundCharacter.accept(self.characterObject.value.filter {
+               
+                         $0.name.lowercased().contains(query.lowercased())
+                                                
+                    })
+                }).disposed(by: disposeBag)
+   
+    }
+    
+    /// Gets characters from the URLs that have been passed by the EpisodeTableViewController
+    private func populateCharacters() {
+        
+        receivedEpisode.subscribe(onNext: { episodeViewModel in
             
-        }
-    }
-}
+            if let episodeViewModel = episodeViewModel{
+                
+                let array = episodeViewModel.episodeCharacters
+                
+                array.subscribe(onNext: { linksArray in
+                    linksArray.compactMap { charactersLink in
+                        
+                        let resource = Resource<Character>(url: URL(string: charactersLink)!)
+                        
+                        URLRequest.load(resource: resource)
+                            .subscribe(onNext: { [self] character in
 
-// MARK: - UISearchResultsUpdating
+                                self.characterObject.accept(characterObject.value + [character])
 
-extension CharactersTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        let searchBar = searchController.searchBar
-        filterContentForSearchText(searchBar.text!)
-    }
-    func filterContentForSearchText(_ searchText: String) {
+                            }).disposed(by: self.disposeBag)
+                    }
+                }).disposed(by: self.disposeBag)
+            }
+        }).disposed(by: disposeBag)
         
-        filteredCharacters = charactersListViewModel.getCharacterNamed(searchText)
-        
-        tableView.reloadData()
     }
-}
-
-// MARK: - EpisodesDelegate
-
-extension CharactersTableViewController: EpisodesDelegate {
-    func episodesDidLoad(vm: SingleCharacterViewModel) {
-        charactersListViewModel.addCharacterViewModel(vm)
-        self.tableView.reloadData()
-    }
+    
 }

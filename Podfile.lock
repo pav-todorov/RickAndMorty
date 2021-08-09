@@ -1,22 +1,78 @@
 PODS:
+  - Alamofire (5.4.3)
+  - Differentiator (5.0.0)
+  - Nuke (9.5.0)
+  - RxAlamofire (6.1.1):
+    - RxAlamofire/Core (= 6.1.1)
+  - RxAlamofire/Core (6.1.1):
+    - Alamofire (~> 5.4)
+    - RxSwift (~> 6.0)
+  - RxAnimated (0.9.0):
+    - RxAnimated/Core (= 0.9.0)
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxAnimated/Core (0.9.0):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxCocoa (6.2.0):
+    - RxRelay (= 6.2.0)
+    - RxSwift (= 6.2.0)
+  - RxDataSources (5.0.0):
+    - Differentiator (~> 5.0)
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxNuke (2.0.1):
+    - Nuke (~> 9.0)
+    - RxSwift (~> 6.0)
+  - RxRelay (6.2.0):
+    - RxSwift (= 6.2.0)
+  - RxSwift (6.2.0)
   - SDWebImage (5.9.5):
     - SDWebImage/Core (= 5.9.5)
   - SDWebImage/Core (5.9.5)
   - SwiftLint (0.40.0)
 
 DEPENDENCIES:
-  - SDWebImage (~> 5.0)
+  - Alamofire
+  - Nuke (~> 9.0)
+  - RxAlamofire
+  - RxAnimated
+  - RxCocoa
+  - RxDataSources
+  - RxNuke
+  - RxSwift
+  - SDWebImage
   - SwiftLint
 
 SPEC REPOS:
   trunk:
+    - Alamofire
+    - Differentiator
+    - Nuke
+    - RxAlamofire
+    - RxAnimated
+    - RxCocoa
+    - RxDataSources
+    - RxNuke
+    - RxRelay
+    - RxSwift
     - SDWebImage
     - SwiftLint
 
 SPEC CHECKSUMS:
+  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
+  Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
+  Nuke: 6f400a4ea957e09149ec335a3c6acdcc814d89e4
+  RxAlamofire: beb75a1c452d0de225651db4903f5d29d034a620
+  RxAnimated: e53fb66cafc0539faf881b734f7412a624527f0a
+  RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
+  RxDataSources: aa47cc1ed6c500fa0dfecac5c979b723542d79cf
+  RxNuke: 23175fb4b7cda4e3aa453588d895198ccf88f5ab
+  RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
+  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   SwiftLint: 4154893c73a4c52d6240195507eb7a3e3c64087e
 
-PODFILE CHECKSUM: 8f253997c3ebc7bcc494f633fec476e69956861d
+PODFILE CHECKSUM: 5807e929a84583fdbf37a97718e00d5fb7416100
 
 COCOAPODS: 1.10.1

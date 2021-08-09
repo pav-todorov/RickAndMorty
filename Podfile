@@ -6,8 +6,15 @@ target 'Rick and Morty' do
   use_frameworks!
 
   # Pods for Rick and Morty
-  platform :ios, '8.0'
-  pod 'SDWebImage', '~> 5.0'
+  pod 'SDWebImage'
   pod 'SwiftLint'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'Alamofire'
+  pod 'RxAlamofire'
+  pod 'RxDataSources'
+  pod 'Nuke', '~> 9.0'
+  pod 'RxAnimated'
+  pod 'RxNuke'
 
 end
