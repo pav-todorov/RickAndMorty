@@ -21,6 +21,7 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
         
     }
     
+    
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
@@ -35,7 +36,6 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
         placeholder: UIImage(named: "icon"),
         transition: .fadeIn(duration: 0.33))
     
-//    var bufferOfCharactersWhileSearching = BehaviorRelay<[Character]>(value: [])
     
     private let disposeBag = DisposeBag()
     var episodeViewModel = BehaviorRelay<EpisodeViewModel?>(value: nil)
@@ -47,6 +47,8 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        populateCharacters()
         
         self.tableView.dataSource = nil
         
@@ -62,13 +64,8 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
         // 5
         definesPresentationContext = true
         
-//        receivedEpisode.subscribe(onNext: {
-//            episode in
-//
-//            self.episodeViewModel.accept(episode)
-//
-//        }).disposed(by: disposeBag)
-        
+        searchController.searchBar.searchTextField.textColor = .white
+
         
         // MARK: - Table view data
         
@@ -78,21 +75,16 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
             } else {
                 return initialCharacters
             }
-
+            
         }.bind(to: tableView.rx.items(cellIdentifier: "CharacterTableViewCell")) { [unowned self] index, model, cell in
-
+            
+            
             Nuke.loadImage(with: ImageRequest(url: URL(string: model.image)!, processors: [
-                ImageProcessors.Circle(border: ImageProcessingOptions.Border(color: .white, width: 20, unit: .points)),
+                ImageProcessors.Circle(border: ImageProcessingOptions.Border(color: .white, width: 20, unit: .points)), ImageProcessors.Resize(size: (cell.imageView?.bounds.size)!)
 
             ]), options: self.options, into: cell.imageView!)
 
-//            ImagePipeline.shared.rx.loadImage(with: URL(string: model.image)!)
-//                .subscribe(onSuccess: { imageView in
-//                        return cell.imageView!.image = imageView.image
-//                             })
-//                .disposed(by: self.disposeBag)
-
-            cell.imageView?.image = UIImage(named: "icon")
+            
             cell.accessoryType = .disclosureIndicator
             cell.textLabel!.numberOfLines = 0
             cell.imageView?.layer.shadowColor = UIColor.gray.cgColor
@@ -100,10 +92,17 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
             cell.imageView?.layer.shadowOffset = .zero
             cell.imageView?.layer.shadowRadius = 5
             cell.textLabel?.text = model.name
-
+            
+            
         }.disposed(by: disposeBag)
-   
-        populateCharacters()
+        
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                
+                self!.tableView.deselectRow(at: indexPath, animated: true)
+                
+            }).disposed(by: disposeBag)
+        
         
         // MARK: - Selecting a row
         
@@ -115,9 +114,9 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
                 guard let singleCharacterVC = strongSelf.storyboard?.instantiateViewController(identifier: "SingleCharacterViewController") as? SingleCharacterViewController else {
                     fatalError("SingleCharacterViewController not found")
                 }
-                                
+                
                 singleCharacterVC.receivedCharacter.accept(model)
-                                
+                
                 strongSelf.navigationController?.showDetailViewController(singleCharacterVC, sender: self)
                 
             }).disposed(by: disposeBag)
@@ -125,16 +124,16 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
         //MARK: - Searching through characters
         
         searchController.searchBar.rx.text
-                .orEmpty
-                .distinctUntilChanged()
-                .subscribe(onNext: {query in
-                    self.foundCharacter.accept(self.characterObject.value.filter {
-               
-                         $0.name.lowercased().contains(query.lowercased())
-                                                
-                    })
-                }).disposed(by: disposeBag)
-   
+            .orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: {query in
+                self.foundCharacter.accept(self.characterObject.value.filter {
+                    
+                    $0.name.lowercased().contains(query.lowercased())
+                    
+                })
+            }).disposed(by: disposeBag)
+        
     }
     
     /// Gets characters from the URLs that have been passed by the EpisodeTableViewController
@@ -153,9 +152,9 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
                         
                         URLRequest.load(resource: resource)
                             .subscribe(onNext: { [self] character in
-
+                                
                                 self.characterObject.accept(characterObject.value + [character])
-
+                                
                             }).disposed(by: self.disposeBag)
                     }
                 }).disposed(by: self.disposeBag)

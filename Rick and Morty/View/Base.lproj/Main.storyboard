@@ -55,7 +55,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CharacterTableViewCell" id="oKf-He-k8o">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFit" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CharacterTableViewCell" id="oKf-He-k8o">
                                 <rect key="frame" x="0.0" y="24.5" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oKf-He-k8o" id="kH5-Ic-atl">
@@ -219,7 +219,7 @@
         <!--Navigation Controller-->
         <scene sceneID="2GW-Bd-ci5">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="FqP-ve-obO" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationControllerOfCharacters" automaticallyAdjustsScrollViewInsets="NO" id="FqP-ve-obO" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fXN-Eg-ovu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

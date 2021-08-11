@@ -29,7 +29,7 @@ class SingleCharacterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         characterNameLabel.adjustsFontSizeToFitWidth = true
         guard let font = UIFont(name: "get schwifty", size: 40) else {
             fatalError("Custom font not found.")
