@@ -69,6 +69,16 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
         
         // MARK: - Table view data
         
+//        tableView.rx.willDisplayCell.subscribe(onNext: { cell in
+//
+//            Nuke.loadImage(with: ImageRequest(url: URL(string: model.image)!, processors: [
+//                ImageProcessors.Circle(border: ImageProcessingOptions.Border(color: .white, width: 20, unit: .points)), ImageProcessors.Resize(size: (cell.imageView?.bounds.size)!)
+//
+//            ]), options: self.options, into: cell.imageView!)
+//
+//
+//        })
+        
         Observable.combineLatest(characterObject, foundCharacter){ (initialCharacters, filteredCharacters) -> [Character] in
             if self.isFiltering {
                 return filteredCharacters
@@ -78,13 +88,12 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
             
         }.bind(to: tableView.rx.items(cellIdentifier: "CharacterTableViewCell")) { [unowned self] index, model, cell in
             
-            
-            Nuke.loadImage(with: ImageRequest(url: URL(string: model.image)!, processors: [
-                ImageProcessors.Circle(border: ImageProcessingOptions.Border(color: .white, width: 20, unit: .points)), ImageProcessors.Resize(size: (cell.imageView?.bounds.size)!)
+                        
+                Nuke.loadImage(with: ImageRequest(url: URL(string: model.image)!, processors: [
+                    ImageProcessors.Circle(border: ImageProcessingOptions.Border(color: .white, width: 20, unit: .points)), ImageProcessors.Resize(size: (cell.imageView?.bounds.size)!)
 
-            ]), options: self.options, into: cell.imageView!)
+                ]), options: self.options, into: cell.imageView!)
 
-            
             cell.accessoryType = .disclosureIndicator
             cell.textLabel!.numberOfLines = 0
             cell.imageView?.layer.shadowColor = UIColor.gray.cgColor
@@ -92,7 +101,6 @@ class CharactersTableViewController: UITableViewController, UISearchResultsUpdat
             cell.imageView?.layer.shadowOffset = .zero
             cell.imageView?.layer.shadowRadius = 5
             cell.textLabel?.text = model.name
-            
             
         }.disposed(by: disposeBag)
         

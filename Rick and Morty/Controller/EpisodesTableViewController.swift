@@ -49,7 +49,7 @@ class EpisodesTableViewController: UITableViewController, UISearchResultsUpdatin
         // 2
         searchController.obscuresBackgroundDuringPresentation = false
         // 3
-        searchController.searchBar.placeholder = "Search a character"
+        searchController.searchBar.placeholder = "Search an episode"
         // 4
         navigationItem.searchController = searchController
         // 5
